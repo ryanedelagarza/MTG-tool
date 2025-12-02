@@ -10,7 +10,17 @@ from io import StringIO
 import tempfile
 
 # Load environment variables
-load_dotenv()
+load_dotenv()  # For local development
+
+# Helper function to get API key from either .env or Streamlit secrets
+def get_api_key():
+    """Get API key from Streamlit secrets or environment variable"""
+    try:
+        # Try Streamlit secrets first (for cloud deployment)
+        return st.secrets.get("GEMINI_API_KEY")
+    except:
+        # Fall back to environment variable (for local development)
+        return os.getenv("GEMINI_API_KEY")
 
 st.set_page_config(page_title="Deck Builder", page_icon="🃏", layout="wide")
 
@@ -427,9 +437,9 @@ if csv_content:
     
     if st.button("🚀 Build Deck", type="primary", use_container_width=True):
         # Validate API key
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = get_api_key()
         if not api_key:
-            st.error("❌ GEMINI_API_KEY not found in .env file!")
+            st.error("❌ GEMINI_API_KEY not found! Please add it to Streamlit secrets or .env file!")
             st.stop()
         
         # Create deck builder
