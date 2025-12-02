@@ -22,8 +22,6 @@ def get_api_key():
         # Fall back to environment variable (for local development)
         return os.getenv("GEMINI_API_KEY")
 
-st.set_page_config(page_title="Deck Builder", page_icon="🃏", layout="wide")
-
 st.title("🃏 Magic: The Gathering Deck Builder")
 st.markdown("""
 Build optimized Commander and Standard decks from your card collection using AI-powered strategy analysis.

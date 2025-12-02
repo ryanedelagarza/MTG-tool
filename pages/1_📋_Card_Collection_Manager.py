@@ -23,8 +23,6 @@ def get_api_key():
         # Fall back to environment variable (for local development)
         return os.getenv("GEMINI_API_KEY")
 
-st.set_page_config(page_title="Card Collection Manager", page_icon="📋", layout="wide")
-
 st.title("📋 Card Collection Manager")
 st.markdown("""
 Upload your Magic: The Gathering card collection CSV and enhance it with data from Scryfall API.
