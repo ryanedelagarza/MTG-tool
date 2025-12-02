@@ -1,0 +1,211 @@
+# Magic: The Gathering Card List Updater
+
+A Python script that automatically fills in missing card information in your Magic: The Gathering card list CSV file using the Scryfall API and optional Google Gemini verification.
+
+## Features
+
+- 🔍 **Automatic Data Fetching**: Retrieves card information from Scryfall's comprehensive database
+- ✅ **AI Verification**: Optional Google Gemini integration to verify data accuracy
+- 🎯 **Smart Updates**: Only fills in empty fields, preserves your existing data
+- 📊 **Progress Tracking**: Clear console output showing which cards are being processed
+- 🛡️ **Safe Updates**: Updates are written back to the same file after all processing is complete
+- ⚡ **Rate Limiting**: Respects API limits with built-in delays
+
+## Supported Fields
+
+The script updates the following columns in your CSV:
+- **Card Color(s)**: Color identity (e.g., "Blue, Red" or "Colorless")
+- **Mana Cost**: Mana symbols (e.g., "{2}{U}{U}")
+- **Card Text**: Oracle text (rules text)
+- **Power/Toughness**: Creature stats (e.g., "2/2")
+
+## Prerequisites
+
+- Python 3.7 or higher
+- A CSV file with your Magic card list
+- (Optional) Google Gemini API key for verification
+
+## Installation
+
+1. **Clone or download this script** to your local machine
+
+2. **Install required Python packages**:
+   ```bash
+   pip install requests google-generativeai
+   ```
+
+3. **(Optional) Set up Google Gemini API key**:
+   - Get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Set it as an environment variable:
+   
+   **On Mac/Linux**:
+   ```bash
+   export GEMINI_API_KEY="your-api-key-here"
+   ```
+   
+   **On Windows Command Prompt**:
+   ```cmd
+   set GEMINI_API_KEY=your-api-key-here
+   ```
+   
+   **On Windows PowerShell**:
+   ```powershell
+   $env:GEMINI_API_KEY="your-api-key-here"
+   ```
+
+## CSV File Format
+
+Your CSV file must have at least one column:
+- **Card Name** (required): The name of the Magic card
+
+The script will automatically add or update these columns:
+- Card Color(s)
+- Card Text
+- Mana Cost
+- Power/Toughness
+
+### Example CSV Structure:
+```csv
+Card Name,Card Color(s),Card Text,Mana Cost,Power/Toughness
+Lightning Bolt,,,{R},
+Black Lotus,,,{0},
+Tarmogoyf,,,{1}{G},
+```
+
+## Usage
+
+1. **Update the script configuration**:
+   - Open `magic_card_updater.py` in your editor
+   - Change the `CSV_FILE` variable to match your file name:
+     ```python
+     CSV_FILE = "your_magic_cards.csv"
+     ```
+
+2. **Run the script**:
+   ```bash
+   python magic_card_updater.py
+   ```
+
+3. **Monitor the progress**:
+   - The script will show you which cards it's processing
+   - It displays success/failure for each card
+   - A summary is shown at the end
+
+### Example Output:
+```
+🃏 Starting Magic Card List Update
+📄 File: magic_cards.csv
+📊 Total cards: 100
+
+Row 1: Processing 'Lightning Bolt'...
+  ✓ Gemini verification passed
+  ✅ Updated successfully
+
+Row 2: 'Black Lotus' - Already complete ✓
+
+Row 3: Processing 'Tarmogoyf'...
+  ✓ Gemini verification passed
+  ✅ Updated successfully
+
+==================================================
+✅ Update complete!
+📊 Updated 2 cards
+💾 Saved to magic_cards.csv
+==================================================
+```
+
+## How It Works
+
+1. **Reads your CSV**: Loads all cards from the file
+2. **Checks each row**: Identifies cards with missing information
+3. **Searches Scryfall**: Queries the free Scryfall API for card data
+4. **Extracts information**: Parses colors, mana cost, text, and power/toughness
+5. **Verifies data** (optional): Uses Gemini AI to double-check accuracy
+6. **Updates CSV**: Fills in empty fields while preserving existing data
+7. **Saves changes**: Writes the updated data back to your file
+
+## API Information
+
+### Scryfall API
+- **Cost**: Free
+- **Rate Limit**: 10 requests per second (script includes delays)
+- **Documentation**: https://scryfall.com/docs/api
+- **No API key required**
+
+### Google Gemini API
+- **Cost**: Free tier available
+- **Purpose**: Verification of card data accuracy
+- **Optional**: Script works without it
+- **Get API key**: https://makersuite.google.com/app/apikey
+
+## Troubleshooting
+
+### "File not found" error
+- Make sure the `CSV_FILE` variable matches your actual file name
+- Ensure the CSV file is in the same directory as the script
+
+### Card not found
+- Check the spelling of the card name in your CSV
+- Scryfall uses fuzzy matching, but very different spellings may not work
+- Try updating the card name to match official spelling
+
+### Gemini verification warnings
+- The script will still update the card, but flags potential issues
+- Review these cards manually to ensure accuracy
+- This is just a precaution, not necessarily an error
+
+### Rate limiting
+- If you get rate limit errors, the script may be running too fast
+- Increase the `time.sleep()` value in the code (default is 0.1 seconds)
+
+## Customization
+
+### Change sleep time between requests
+```python
+time.sleep(0.5)  # Change 0.1 to 0.5 for slower processing
+```
+
+### Skip Gemini verification
+```python
+updater = MagicCardUpdater(CSV_FILE)  # Don't pass API key
+```
+
+### Add more fields
+Modify the `extract_card_data()` method to include additional Scryfall fields like:
+- `type_line`: Card type (e.g., "Creature — Human Wizard")
+- `rarity`: Card rarity
+- `set`: Set code
+
+## Notes
+
+- The script preserves any existing data in your CSV
+- Only empty fields are updated
+- The original file is overwritten with updated data
+- Consider backing up your CSV before running the script
+- Card names must be spelled reasonably close to the official name
+
+## License
+
+Free to use and modify for personal projects.
+
+## Contributing
+
+Feel free to enhance this script! Some ideas:
+- Add support for more card attributes
+- Implement batch processing for very large lists
+- Add a backup feature before updating
+- Create a GUI interface
+- Add support for multiple card printings
+
+## Support
+
+If you encounter issues:
+1. Check the card name spelling in your CSV
+2. Verify your CSV has a "Card Name" column
+3. Ensure you have internet connectivity
+4. Check that required packages are installed
+
+## Acknowledgments
+
+- Card data provided by [Scryfall](https://scryfall.com/)
+- AI verification powered by [Google Gemini](https://deepmind.google/technologies/gemini/)
