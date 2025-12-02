@@ -1,4 +1,4 @@
-import streamlit as st
+﻿import streamlit as st
 import pandas as pd
 import csv
 import os
@@ -22,7 +22,7 @@ def get_api_key():
         # Fall back to environment variable (for local development)
         return os.getenv("GEMINI_API_KEY")
 
-st.title("🃏 Magic: The Gathering Deck Builder")
+st.title("ðŸƒ Magic: The Gathering Deck Builder")
 st.markdown("""
 Build optimized Commander and Standard decks from your card collection using AI-powered strategy analysis.
 """)
@@ -226,7 +226,7 @@ You are a skilled assistant with extensive expertise in building Magic: The Gath
 # Output Format
 
 - **Decklist**: Present a Markdown table with columns: Card Name, Card Type, Is Fancy (Yes/No), and Notes
-- **Grouping**: Group cards by type—Lands, Creatures, Instants, Sorceries, Artifacts, Enchantments, Planeswalkers, Others—and sort alphabetically within each group
+- **Grouping**: Group cards by typeâ€”Lands, Creatures, Instants, Sorceries, Artifacts, Enchantments, Planeswalkers, Othersâ€”and sort alphabetically within each group
 - **Is Fancy**: Indicate 'Yes' if a card is marked as fancy in the collection, otherwise 'No'
 - **ALL CARDS MUST BE FROM COLLECTION**: Do not include any cards not in the user's collection in the main decklist
 - **Summary**: Show total counts for each card type after the decklist
@@ -273,39 +273,39 @@ You are a skilled assistant with extensive expertise in building Magic: The Gath
         
         # Load collection
         if progress_callback:
-            progress_callback("📚 Loading collection...")
+            progress_callback("ðŸ“š Loading collection...")
         cards = self.load_collection_from_string(csv_content)
         
         if progress_callback:
-            progress_callback(f"✅ Loaded {len(cards)} cards from collection")
+            progress_callback(f"âœ… Loaded {len(cards)} cards from collection")
         
         # Filter by colors
         if progress_callback:
-            progress_callback("🎨 Filtering cards by color preference...")
+            progress_callback("ðŸŽ¨ Filtering cards by color preference...")
         filtered_cards = self.filter_by_colors(cards, colors)
         
         if not filtered_cards:
-            return "❌ Error: No cards found matching the color preference!"
+            return "âŒ Error: No cards found matching the color preference!"
         
         if progress_callback:
-            progress_callback(f"✅ Filtered to {len(filtered_cards)} cards")
+            progress_callback(f"âœ… Filtered to {len(filtered_cards)} cards")
         
         # Load knowledge base
         if progress_callback:
-            progress_callback(f"📖 Loading knowledge base for {format_type}...")
+            progress_callback(f"ðŸ“– Loading knowledge base for {format_type}...")
         knowledge, files_loaded = self.load_knowledge_base(format_type)
         
         if progress_callback:
-            progress_callback(f"✅ Loaded {files_loaded} knowledge base file(s)")
+            progress_callback(f"âœ… Loaded {files_loaded} knowledge base file(s)")
         
         # Format collection for prompt
         if progress_callback:
-            progress_callback("📝 Formatting collection for AI...")
+            progress_callback("ðŸ“ Formatting collection for AI...")
         collection_text = self.format_collection_for_prompt(filtered_cards)
         
         # Build system prompt
         if progress_callback:
-            progress_callback("🔧 Building prompt...")
+            progress_callback("ðŸ”§ Building prompt...")
         system_prompt = self.build_system_prompt(
             format_type, colors, commander, additional_notes, knowledge
         )
@@ -315,45 +315,45 @@ You are a skilled assistant with extensive expertise in building Magic: The Gath
         
         # Call Gemini
         if progress_callback:
-            progress_callback("🤖 Generating deck with Gemini AI... (this may take a moment)")
+            progress_callback("ðŸ¤– Generating deck with Gemini AI... (this may take a moment)")
         
         try:
             response = self.model.generate_content(full_prompt)
             result = response.text
             
             if progress_callback:
-                progress_callback("✅ Deck generation complete!")
+                progress_callback("âœ… Deck generation complete!")
             
             return result
             
         except Exception as e:
-            error_msg = f"❌ Error generating deck: {e}"
+            error_msg = f"âŒ Error generating deck: {e}"
             if progress_callback:
                 progress_callback(error_msg)
             return error_msg
 
 
 # Main UI
-st.header("1️⃣ Select Card Collection")
+st.header("1ï¸âƒ£ Select Card Collection")
 
 # Create tabs for different input methods
-tab1, tab2 = st.tabs(["📋 Use Cleaned Data", "📤 Upload New CSV"])
+tab1, tab2 = st.tabs(["ðŸ“‹ Use Cleaned Data", "ðŸ“¤ Upload New CSV"])
 
 csv_content = None
 csv_source = None
 
 with tab1:
     if 'cleaned_csv' in st.session_state and st.session_state.cleaned_csv:
-        st.success(f"✅ Cleaned data available: {st.session_state.cleaned_csv_name}")
+        st.success(f"âœ… Cleaned data available: {st.session_state.cleaned_csv_name}")
         
         # Preview
         cleaned_df = pd.read_csv(StringIO(st.session_state.cleaned_csv))
-        st.info(f"📊 {len(cleaned_df)} cards in collection")
+        st.info(f"ðŸ“Š {len(cleaned_df)} cards in collection")
         
-        with st.expander("👁️ Preview Collection"):
+        with st.expander("ðŸ‘ï¸ Preview Collection"):
             st.dataframe(cleaned_df.head(10), use_container_width=True)
         
-        if st.button("✅ Use This Collection", type="primary", use_container_width=True):
+        if st.button("âœ… Use This Collection", type="primary", use_container_width=True):
             csv_content = st.session_state.cleaned_csv
             csv_source = "cleaned"
             st.success("Collection selected!")
@@ -369,12 +369,12 @@ with tab2:
     
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
-        st.success(f"✅ Loaded {len(df)} cards from {uploaded_file.name}")
+        st.success(f"âœ… Loaded {len(df)} cards from {uploaded_file.name}")
         
-        with st.expander("👁️ Preview Collection"):
+        with st.expander("ðŸ‘ï¸ Preview Collection"):
             st.dataframe(df.head(10), use_container_width=True)
         
-        if st.button("✅ Use This Collection", type="primary", use_container_width=True):
+        if st.button("âœ… Use This Collection", type="primary", use_container_width=True):
             uploaded_file.seek(0)
             csv_content = uploaded_file.read().decode('utf-8')
             csv_source = "uploaded"
@@ -383,14 +383,14 @@ with tab2:
 # Deck Building Configuration
 if csv_content:
     st.markdown("---")
-    st.header("2️⃣ Configure Your Deck")
+    st.header("2ï¸âƒ£ Configure Your Deck")
     
     col1, col2 = st.columns(2)
     
     with col1:
         # Format selection
         format_type = st.selectbox(
-            "🎴 Deck Format",
+            "ðŸŽ´ Deck Format",
             options=["Commander", "Standard"],
             help="Select the format for your deck"
         )
@@ -408,7 +408,7 @@ if csv_content:
     
     with col2:
         # Color selection
-        st.write("🎨 **Color Identity**")
+        st.write("ðŸŽ¨ **Color Identity**")
         color_options = {
             "White": st.checkbox("White (W)", key="white"),
             "Blue": st.checkbox("Blue (U)", key="blue"),
@@ -420,24 +420,24 @@ if csv_content:
         selected_colors = [color for color, selected in color_options.items() if selected]
         
         if not selected_colors:
-            st.info("💡 No colors selected = All colors available")
+            st.info("ðŸ’¡ No colors selected = All colors available")
     
     # Additional notes
     additional_notes = st.text_area(
-        "📝 Additional Notes or Preferences",
+        "ðŸ“ Additional Notes or Preferences",
         placeholder="e.g., Focus on tribal synergies, competitive meta, budget-friendly, etc.",
         help="Provide any additional guidance for deck building"
     )
     
     # Build deck button
     st.markdown("---")
-    st.header("3️⃣ Generate Deck")
+    st.header("3ï¸âƒ£ Generate Deck")
     
-    if st.button("🚀 Build Deck", type="primary", use_container_width=True):
+    if st.button("ðŸš€ Build Deck", type="primary", use_container_width=True):
         # Validate API key
         api_key = get_api_key()
         if not api_key:
-            st.error("❌ GEMINI_API_KEY not found! Please add it to Streamlit secrets or .env file!")
+            st.error("âŒ GEMINI_API_KEY not found! Please add it to Streamlit secrets or .env file!")
             st.stop()
         
         # Create deck builder
@@ -448,7 +448,7 @@ if csv_content:
         with progress_container:
             progress_bar = st.progress(0)
             status_text = st.empty()
-            log_container = st.expander("📝 Build Log", expanded=True)
+            log_container = st.expander("ðŸ“ Build Log", expanded=True)
             log_text = log_container.empty()
             logs = []
             
@@ -490,22 +490,22 @@ if csv_content:
                 st.session_state.deck_filename = f"deck_{format_type}_{color_str}_{timestamp}.md"
                 
                 progress_bar.progress(100)
-                status_text.success("✅ Deck building complete!")
+                status_text.success("âœ… Deck building complete!")
                 
             except Exception as e:
-                st.error(f"❌ Error building deck: {e}")
+                st.error(f"âŒ Error building deck: {e}")
                 st.stop()
 
 # Display results
 if st.session_state.generated_deck:
     st.markdown("---")
-    st.header("🎉 Your Generated Deck")
+    st.header("ðŸŽ‰ Your Generated Deck")
     
     # Download button
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.download_button(
-            label="💾 Download Deck as Markdown",
+            label="ðŸ’¾ Download Deck as Markdown",
             data=st.session_state.generated_deck,
             file_name=st.session_state.deck_filename,
             mime="text/markdown",
@@ -518,7 +518,7 @@ if st.session_state.generated_deck:
 
 # Help section
 st.markdown("---")
-with st.expander("ℹ️ Help & Tips"):
+with st.expander("â„¹ï¸ Help & Tips"):
     st.markdown("""
     ### How to build a deck:
     1. **Select Collection**: Choose to use cleaned data from Card Collection Manager or upload a new CSV
@@ -540,4 +540,5 @@ with st.expander("ℹ️ Help & Tips"):
     - **Commander**: 100 cards including commander, singleton format
     - **Standard**: 60+ cards minimum, up to 4 copies per card
     """)
+
 
